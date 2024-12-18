@@ -1,0 +1,1315 @@
+{% load static %}
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>Betting Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+        }
+        .navbar {
+      background-color:#d6e600;
+      color: #fff; 
+      padding: 7px;
+      display: flex;
+      border-radius: 6px;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;      
+    z-index: 1000;   
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); 
+     
+
+
+
+
+    }
+    
+    .navbar-logo {
+      height: 40px; /* Adjust the height as needed */
+      width: auto; /* This maintains the aspect ratio */
+      margin-right: 50px;
+      
+      
+    }
+
+    /* Button styles (adjust as needed) */
+    .btn {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: auto;
+    }
+
+    .btn-login {
+      background-color: yellow; /* Blue color for login button */
+      color: green;
+      border-radius: 15px;
+      text-transform: uppercase;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .btn-register {
+      background-color: #4caf50; /* Green color for register button */
+      color: #001f3f;
+      border-radius: 15px;
+      text-transform: uppercase;
+      
+    }
+
+
+
+        .content {
+            padding: 20px;
+            background-color: white;
+        }
+        .section-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .match {
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Best Odds Styling */
+        .best-odds {
+            background-color: hsl(71, 100%, 50%); /* Gold background for best odds */
+            color: #000; /* Black text for contrast */
+        }
+        /* Custom Shape Hot Odds Label */
+/* Custom Shape Hot Odds Label */
+/* Container for both Hot Odds and Upcoming Matches */
+/* Matches Container for Best/Hot Odds Section */
+    .slider-container {
+    width: 100%; /* Set a smaller width for the slider */
+    max-width: 500px; /* Max width of the slider */
+    margin: 80px auto; /* Center the slider horizontally */
+    overflow: hidden;
+    padding-top: 30px;
+    margin-top: 4px;
+    padding-bottom: 1px;
+    background-color:#d6e650;
+    border-radius: 15px;
+    
+}
+
+.slider {
+    display: flex;
+    width: 100%; /* Enough width to hold all slides */
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+    width: 100%; /* Each slide takes full width of container */
+    flex-shrink: 0;
+}
+
+.slide img {
+    width: 100%; /* Keep the image width 100% of the slide */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 140px; /* Set a maximum height for the images */
+    border-radius: 10px;
+    object-fit: fill;
+}
+.matches-container {
+    background: linear-gradient(
+        to bottom,
+        hsl(71, 100%, 50%) 0%,  /* Hot Odds vibrant green */
+        white 100%               /* End the gradient at white */
+    );
+    padding: 5px;
+    border-radius: 10px;
+    margin-left: 250px; 
+    margin-right: 250px;
+}
+
+/* Upcoming Matches Section */
+.upcoming-match {
+    background-color: white; /* Pure white for upcoming matches */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px; /* Space between Hot Odds and Upcoming Matches */
+}
+
+
+/* Hot Odds Section Styling */
+.best-odds {
+    background-color: transparent; /* Use the container's gradient */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.hot-label {
+    display: inline-block;
+    background-color: hsl(27, 100%, 50%);
+    color: white;
+    padding: 5px 10px;
+    font-weight: bold;
+    border-radius: 25px;
+    font-size: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-style: italic;
+}
+
+.hot-label .hot-icon {
+    font-size: 20px;
+    margin-right: 5px;
+}
+.betslip {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: aliceblue;
+    border-radius: 13px;
+}
+
+.betslip-items {
+    list-style: none;
+    padding: 0;
+}
+
+.betslip-items li {
+    margin: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.betslip-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Align elements to the right */
+    margin-top: 10px;
+}
+
+#bet-amount {
+    width: 150px;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+#total-odds, #possible-win {
+    margin: 5px 0;
+}
+.badge {
+    position: absolute;
+    top: -5px;
+    right: 20px;
+    background-color: aliceblue;
+    color: yellowgreen;
+    border-radius: 50%;
+    padding: 5px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    /* Initially hide badge if there are no bets */
+}
+#place-bet-button {
+    background-color: green; /* Green button */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#place-bet
+
+/* Odds Buttons */
+.odds button {
+    padding: 10px 5px;
+    font-size: 15px;
+    background-color: #5cb85c;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+.odds button:hover {
+    background-color: #4cae4c;
+}
+
+/* Upcoming Matches Section */
+.upcoming-match {
+    background-color: white; /* Pure white for upcoming matches */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px; /* Space between Hot Odds and Upcoming Matches */
+}
+
+/* Title Styling */
+.section-title {
+    color: #333;
+    font-size: 24px;
+    margin-top: 40px;
+    text-align: center;
+}
+
+/* General Styling */
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    color: #555;
+    margin-bottom: 10px;
+}
+.odds-row {
+    display: flex;
+    justify-content: space-between;
+}
+.markets-link {
+    color: #0275d8;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+
+
+
+        /* Live Matches Styling */
+        .live-match {
+            background-color: #000; /* Black background */
+            color: #00ff00;
+            
+             /* Green text */
+        }
+        .sports-header {
+    display: flex;
+    overflow-x: auto; /* Enables horizontal scrolling */
+    white-space: nowrap;
+    padding: 10px 0;
+    scrollbar-width: none; /* Hides scrollbar in Firefox */
+    -ms-overflow-style: none; /* Hides scrollbar in Internet Explorer and Edge */
+}
+.sports-header::-webkit-scrollbar {
+    display: none; /* Hides scrollbar in Chrome, Safari, and other WebKit-based browsers */
+}
+
+.sports-item {
+    color: white;
+    font-weight: bold;
+    padding: 10px 16px;
+    margin: 0 10px;
+    border-radius: 20px;
+    text-align: center;
+    min-width: 50px; /* Ensures each item has enough width */
+    flex-shrink: 0; /* Prevents shrinking of items */
+    cursor: pointer;
+}
+.new-tag {
+    display: inline-block;
+    background-color: red;
+    color: white;
+    font-size: 8px;
+    font-weight: bold;
+    padding: 2px 2px;
+    border-radius: 3px;
+    margin-bottom: 2px;
+    position: relative;
+    top: 3px; /* Adjusts the tag position slightly above the text */
+    left: 17px;
+}
+
+
+.games-list {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    background-color: #f8f8f8;
+    margin-top: 60px;
+}
+
+.games-list ul {
+    display: flex;
+    gap: 5px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.games-list ul li a {
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 16px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.games-list ul li a:hover {
+    color: #fff;
+    background-color: #007bff; /* Adjust as needed */
+    border-radius: 5px;
+}
+
+
+        /* Upcoming Matches Styling */
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 10px;
+            color: gray;
+        }
+
+.team-names {
+    flex: 1; /* This will push the team names to the left and give space for the buttons */
+    text-align: left;
+}
+
+.odds {
+    margin-left: 10px; /* Adds some space between the team names and the buttons */
+}
+
+        .odds-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 3px;
+            margin-bottom: 10px;
+        }
+        .odds-row .odds {
+            flex-grow: 1;
+            text-align: center;
+        }
+        .odds button {
+            padding: 10px 5px;
+            font-size: 8px;
+            background-color: #5cb85c;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        .odds button:hover {
+            background-color: #4cae4c;
+        }
+        .markets-link {
+            text-decoration: none;
+            color: #0275d8;
+            font-weight: bold;
+            font-size: 10px;
+            text-align: right;
+            display: block;
+            margin-top: 10px;
+        }
+        .markets-link:hover {
+            text-decoration: underline;
+        }
+        .sidebar {
+         height: 100%;
+         width: 250;
+         position: fixed;
+         z-index: 1;
+         top: 0;
+         left: 0;
+         background-color:hsl(71, 100%, 50%);
+         overflow-x: hidden;
+         transition: 0.5s;
+         padding-top: 60px;
+         margin-top: 90px;
+         border-radius: 10px;
+        }
+        #toggleBtn, #closeBtn {
+  margin: 10px;
+}
+
+#closeBtn {
+  display: none; /* Close button hidden by default */
+}
+.sidebar a img {
+            margin-right: 10px;
+            width: 24px; /* Adjust flag size */
+            height: auto;
+}
+
+.sidebar h16 {
+            color: white;
+            margin: 10px 15px;
+            font-size: 16px;
+        }
+
+.sidebar a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 15px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+#mainContent {
+  margin-left: 217px;
+  padding: 16px;
+  margin-right: 150px;
+}
+
+.sidebar a:hover {
+  color: #f1f1f1;
+}
+
+.sidebar .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.openbtn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #111;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+}
+
+.openbtn:hover {
+  background-color: #444;
+}
+
+#main {
+  transition: margin-left .5s;
+  padding: 16px;
+}
+/* Position the betslip in the top-right corner on larger screens */
+.betslip-container {
+            background-color:  hsl(71, 100%, 50%);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 225px;
+            top: 120px;
+            right: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            position: fixed;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .bet-item {
+            padding: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+        .bet-item:last-child {
+            border-bottom: none;
+        }
+        .bet-details {
+            flex-grow: 1;
+        }
+        .remove-btn {
+            background-color: #f44336;
+            border: none;
+            color: white;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .remove-btn:hover {
+            background-color: #d32f2f;
+        }
+        .input-section, .total-section {
+            margin: 10px 0;
+            text-align: center;
+        }
+        #bet-amount {
+            width: 80%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        .total-section span {
+            display: block;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        .clear-btn {
+            background-color: #f44336;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            display: block;
+            margin: 10px auto;
+        }
+        .clear-btn:hover {
+            background-color: #d32f2f;
+        }
+        .submit-btn {
+            background-color: #00ff6a;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 10px;
+            width: 100%;
+        }
+        .submit-btn:hover {
+            background-color: #00ff6a;
+        }
+        @media (max-width: 768px) {
+    .betslip-container {
+        display: none;
+    }
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidebar {padding-top: 15px;}
+  .sidebar a {font-size: 18px;}
+
+}
+@media screen and (max-width: 450px){
+    #mainContent {
+  margin-left: 0px;
+  padding: 0px;
+  margin-right: 0px;
+}
+    .sidebar{
+        width: 0;
+    }
+    
+}
+        
+        .bottom-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #222;
+            color: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+
+        .bottom-menu a {
+            color: white;
+            text-decoration: none;
+            text-align: center;
+        }
+        .bottom-menu a .icon {
+            font-size: 20px;
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .betslip {
+                width: 100%;
+                right: 0;
+                left: 0;
+                top: auto;
+                bottom: 50px;
+            }
+            .menu-toggle {
+                display: block;
+                color: white;
+            }
+            
+            .odds-row {
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 1px;
+            }
+            .betslip {
+                position: relative;
+                width: 100%;
+                right: auto;
+                top: auto;
+                bottom: 10px;
+                margin-top: 20px;
+            }
+        }
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: row;
+                align-items: flex-end;
+                padding: 10px;
+            }
+
+            .logo {
+                margin-bottom: 10px;
+            }
+            
+        }
+        
+            .btn {
+                margin: 5px 0;
+                font-size: 8px;
+                font-weight: bolder;
+            }
+            @media (max-width: 450px) {
+                .matches-container {
+                     margin: auto;
+    }
+                
+            }
+        
+    </style>
+</head>
+<body>
+    <div id="mySidebar" class="sidebar">
+        <button id="closeBtn" onclick="toggleMenu()">✖</button>
+        <h16>Popular Countries</h16>
+        <!-- Countries with flags -->
+    <a href="#"><img src="https://flagcdn.com/w20/gb-eng.png" alt="England"> ENGLAND EPL</a>
+    <a href="#"><img src="https://flagcdn.com/w20/es.png" alt="Spain"> SPAIN La Liga</a>
+    <a href="#"><img src="https://flagcdn.com/w320/it.png" alt="Italy">ITALY Serie A</a>
+    <a href="#"><img src="https://flagcdn.com/w20/de.png" alt="Germany"> GERMANY Bundesliga</a>
+    <a href="#"><img src="https://flagcdn.com/w20/fr.png" alt="France"> FRANCE Ligue 1</a>
+    
+    
+    <h16>Other Countries</h16>
+    <a href="#"><img src="https://flagcdn.com/w20/br.png" alt="Brazil"> BRAZIL</a>
+    <a href="#"><img src="https://flagcdn.com/w20/fi.png" alt="Finland"> FINLAND</a>
+    <a href="#"><img src="https://flagcdn.com/w20/gr.png" alt="Greece"> GREECE</a>
+    <a href="#"><img src="https://flagcdn.com/w320/dk.png" alt="Denmark Flag">DENMARK</a>
+    <a href="#"><img src="https://flagcdn.com/w320/mx.png" alt="Mexico Flag">MEXICO</a>
+    <a href="#"><img src="https://flagcdn.com/w320/pl.png" alt="Poland Flag">POLAND</a>
+    <a href="#"><img src="https://flagcdn.com/w320/tr.png" alt="Turkey Flag">TURKEY</a>
+    <a href="#"><img src="https://flagcdn.com/w320/uy.png" alt="Uruguay Flag">URUGUAY</a>
+    <a href="#"><img src="https://flagcdn.com/w20/ar.png" alt="Argentina"> ARGENTINA</a>
+    <a href="#"><img src="https://flagcdn.com/w20/au.png" alt="Australia"> AUSTRALIA</a>
+    <a href="#"><img src="https://flagcdn.com/w20/cz.png" alt="Czech Republic"> CZECH REPUBLIC</a>
+      </div>
+<!-- Header Section -->
+
+  <div class="navbar">
+    <img src="{% static 'images/logo89.jpg' %}" alt="BetPesa Logo" class="navbar-logo">
+    <div class="navbar-links">
+        <!-- Placeholder for the balance or login button -->
+        <a href="{% url 'login' %}" id="user-balance-btn" class="btn btn-login">Login</a>
+        
+        <!-- Placeholder for the register or deposit button -->
+        <a href="{% url 'register' %}" id="register-deposit-btn" class="btn btn-register">Register</a>
+    </div>
+</div>
+
+<div class="games-list">
+    <ul>
+        <li> <a href="{% url 'aviator' %}"><span class="new-tag">New</span> Aviator</a></li>
+        <li><a href="#">Casino</a></li>
+        <li><a href="#">Sports Betting</a></li>
+        <li><a href="#">Virtual Sports</a></li>
+        <!-- Add more items as needed -->
+    </ul>
+</div>
+
+  <div class="slider-container">
+    <div class="slider">
+        <div class="slide">
+            <img src="{% static 'images/image1.webp' %}" alt="Image 1">
+        </div>
+        <div class="slide">
+            <img src="{% static 'images/image2.webp' %}" alt="Image 2">
+        </div>
+    </div>
+</div>
+<!-- Main Content Section -->
+<div id="mainContent">
+     <!-- Betslip -->
+     <div class="betslip-container">
+        <h2>Your Betslip</h2>
+        <div id="betslip-items"></div>
+        <button class="clear-btn" onclick="clearBetslip()">Clear All</button>
+        <div class="input-section">
+            <input type="number" id="bet-amount" name="bet_amount" placeholder="Enter amount" oninput="calculatePossibleWin()">
+        </div>
+        <div class="total-section">
+            <span id="total-odds">Total Odds: 0</span>
+            <span id="possible-win">Possible Win: 0</span>
+        </div>
+        <form id="betslip-form" action="{% url 'submit_betslip' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="betslip_data" id="betslip-data">
+            <input type="hidden" name="bet_amount" id="bet-amount-form">
+            <input type="hidden" name="total_odds" id="total-odds-form">
+            <button type="button" class="submit-btn" onclick="submitBetslip()">Place Bet</button>
+        </form>
+    </div>
+
+    <script src="submit_betslip.js"></script>
+
+    <!-- Live Matches Section (Second) -->
+    <h2 class="section-title">Live Matches</h2>
+
+    <!-- Match 1 (Live) -->
+    <div id="live">
+        <!-- Live scores will be dynamically inserted here -->
+    </div>
+    
+</div>
+    <div class="matches-container">
+        <!-- Hot Odds Section -->
+        <div id="hot">
+            <div class="hot-label">
+                <span class="hot-icon">🔥</span>
+                <span class="hot-text">Hot</span>
+            </div>
+            <div class="match" data-start="2025-10-30T15:19:00" data-home-team="West Ham United" data-away-team="Manchester United"data-home-goals="0" data-away-goals="0">
+                <div class="game-info">
+                    <span style="font-weight: bold; color: #000;">West Ham United<br>Manchester United</span>
+                    <span style="font-weight: bold; color: #000;">5:00pm Sun 27/10</span>
+                </div>
+                <div class="odds-row">
+                    <div class="odds">
+                        <button onclick="addToBetslip('1', 3.00)">1<br>3.00</button>
+                    </div>
+                    <div class="odds">
+                        <button onclick="addToBetslip('X', 3.90)">X<br>3.90</button>
+                    </div>
+                    <div class="odds">
+                        <button onclick="addToBetslip('2', 2.40)">2🔥<br>2.40</button>
+                    </div>
+                </div>
+                <a href="#" class="markets-link">+108 Markets</a>
+            </div>
+            <div class="match" data-start="2025-10-27T119:30:00" data-home-team="Arsenal" data-away-team="Liverpool"data-home-goals="0" data-away-goals="0">
+            <div class="game-info">
+                <span style="font-weight: bold; color: #000;">Arsenal<br>Liverpool</span>
+                <span style="font-weight: bold; color: #000;">7:30pm Sun 27/10</span>
+            </div>
+            <div class="odds-row">
+                <div class="odds">
+                    <button onclick="addToBetslip('1', 2.60)">1🔥<br>2.60</button>
+                </div>
+                <div class="odds">
+                    <button onclick="addToBetslip('X', 3.40)">X<br>3.40</button>
+                </div>
+                <div class="odds">
+                    <button onclick="addToBetslip('2', 3.00)">2<br>3.00</button>
+                </div>
+            </div>
+            <a href="#" class="markets-link">+108 Markets</a>
+        </div>
+        <div class="match" data-start="2025-10-27T17:00:00" data-home-goals="0" data-away-goals="0">
+            <div class="game-info">
+            <span style="font-weight: bold; color: #000;">Hellas Verona B<br>Ac Monza</style></span>
+            <span style="font-weight: bold; color: #000;">9:45pm Mon 21/10</span>
+            </div>
+            <div class="odds-row">
+                <div class="odds">
+                    <button onclick="addToBetslip('1', 1.65)">1🔥<br>1.65</button>
+                </div>
+                <div class="odds">
+                    <button onclick="addToBetslip('X', 2.08)">X<br>2.08</button>
+                </div>
+                <div class="odds">
+                    <button onclick="addToBetslip('2', 2.66)">2<br>2.66</button>
+                </div>
+            </div>
+            <a href="#" class="markets-link">+96 Markets</a>
+        </div>
+        <div class="match" data-start="2025-10-25T14:03:00" data-home-goals="0" data-away-goals="0">
+            <div class="game-info">
+            <span style="font-weight: bold; color: #000;">Hellas Verona<br>Ac Monza</style></span>
+            <span style="font-weight: bold; color: #000;">9:45pm Mon 21/10</span>
+            </div>
+            <div class="odds-row">
+                <div class="odds">
+                    <button onclick="addToBetslip('1', 2.55)">1<br>2.55</button>
+                </div>
+                <div class="odds">
+                    <button onclick="addToBetslip('X', 2.78)">X 🔥<br>2.78</button>
+                </div>
+                <div class="odds">
+                    <button onclick="addToBetslip('2', 2.82)">2<br>2.82</button>
+                </div>
+            </div>
+            <a href="#" class="markets-link">+96 Markets</a>
+        </div>
+        <div class="match" data-start="2025-10-30T15:19:00" data-home-team="West Ham United" data-away-team="Manchester United"data-home-goals="0" data-away-goals="0">
+            <div class="game-info">
+                <span style="font-weight: bold; color: #000;">Hellas Verona<br>Ac Monza</style></span>
+            <span style="font-weight: bold; color: #000;">9:45pm Mon 21/10</span>
+            </div>
+            <div class="odds-row">
+                <div class="odds">
+                    <button onclick="addToBetslip('1', 1.23)">1🔥<br>1.23</button>
+                </div>
+                <div class="odds">
+                    <button onclick="addToBetslip('X', 2.8)">X<br>2.8</button>
+                </div>
+                <div class="odds">
+                    <button onclick="addToBetslip('2', 4.2)">2<br>4.2</button>
+                </div>
+            </div>
+            <a href="#" class="markets-link">+96 Markets</a>
+        </div>
+        <!-- Upcoming Matches Section -->
+        <div id="upcoming">
+        <h2 class="section-title">Upcoming Matches</h2>
+        <div class="match" data-start="2025-10-30T15:19:00" data-home-team="West Ham United" data-away-team="Manchester United"data-home-goals="0" data-away-goals="0">
+            <div class="game-info">
+            <span style="font-weight: bold; color: #000;">Arsenal<br>Manchester Utd</style></span>
+            <span style="font-weight: bold; color: #000;">9:45pm Mon 21/10</span>
+            </div>
+            <div class="odds-row">
+                <div class="odds">
+                    <button onclick="addToBetslip('1', 2.91)">1 <br>2.91</button>
+                </div>
+                <div class="odds">
+                    <button onclick="addToBetslip('X', 2.88)">X<br>2.88</button>
+                </div>
+                <div class="odds">
+                    <button onclick="addToBetslip('2', 2.55)">2 <br>2.55</button>
+                </div>
+            </div>
+            <a href="#" class="markets-link">+96 Markets</a>
+        </div>
+            <div class="game-info">
+            <span style="font-weight: bold; color: #000;">Hellas Verona<br>Ac Monza</style></span>
+            <span style="font-weight: bold; color: #000;">9:45pm Mon 21/10</span>
+            </div>
+            <div class="odds-row">
+                <div class="odds">
+                    <button onclick="addToBetslip('1', 1.9)">1 <br>1.9</button>
+                </div>
+                <div class="odds">
+                    <button onclick="addToBetslip('X', 3.4)">X <br>3.4</button>
+                </div>
+                <div class="odds">
+                    <button onclick="addToBetslip('2', 3.2)">2 <br>3.2</button>
+                </div>
+            </div>
+            <a href="#" class="markets-link">+96 Markets</a>
+        
+        <div class="game-info">
+            <span style="font-weight: bold; color: #000;">Hellas Verona<br>Ac Monza</style></span>
+            <span style="font-weight: bold; color: #000;">9:45pm Mon 21/10</span>
+        </div>
+        <div class="odds-row">
+            <div class="odds">
+                <button onclick="addToBetslip('1', 1.9)">1 <br>1.9</button>
+            </div>
+            <div class="odds">
+                <button onclick="addToBetslip('X', 3.4)">X <br>3.4</button>
+            </div>
+            <div class="odds">
+                <button onclick="addToBetslip('2', 3.2)">2 <br>3.2</button>
+            </div>
+        </div>
+        <a href="#" class="markets-link">+96 Markets</a>
+        <div class="game-info">
+        <span style="font-weight: bold; color: #000;">Hellas Verona<br>Ac Monza</style></span>
+        <span style="font-weight: bold; color: #000;">9:45pm Mon 21/10</span>
+        </div>
+        <div class="odds-row">
+            <div class="odds">
+                <button onclick="addToBetslip('1', 1.9)">1 <br>1.9</button>
+            </div>
+            <div class="odds">
+                <button onclick="addToBetslip('X', 3.4)">X <br>3.4</button>
+            </div>
+            <div class="odds">
+                <button onclick="addToBetslip('2', 3.2)">2 <br>3.2</button>
+            </div>
+        </div>
+        <a href="#" class="markets-link">+93 Markets</a>
+        
+        <div class="game-info">
+            <span style="font-weight: bold; color: #000;">Hellas Verona<br>Ac Monza</style></span>
+            <span style="font-weight: bold; color: #000;">9:45pm Mon 21/10</span>
+        </div>
+        <div class="odds-row">
+            <div class="odds">
+                <button onclick="addToBetslip('1', 1.9)">1 <br>1.9</button>
+            </div>
+            <div class="odds">
+                <button onclick="addToBetslip('X', 3.4)">X <br>3.4</button>
+            </div>
+            <div class="odds">
+                <button onclick="addToBetslip('2', 3.2)">2 <br>3.2</button>
+            </div>
+        </div>
+        <a href="#" class="markets-link">+94 Markets</a>
+        <div class="game-info">
+            <span style="font-weight: bold; color: #000;">Hellas Verona<br>Ac Monza</style></span>
+            <span style="font-weight: bold; color: #000;">9:45pm Mon 21/10</span>
+        </div>
+        <div class="odds-row">
+            <div class="odds">
+                <button onclick="addToBetslip('1', 1.9)">1 <br>1.9</button>
+            </div>
+            <div class="odds">
+                <button onclick="addToBetslip('X', 3.4)">X <br>3.4</button>
+            </div>
+            <div class="odds">
+                <button onclick="addToBetslip('2', 3.2)">2 <br>3.2</button>
+            </div>
+        </div>
+        <a href="#" class="markets-link">+96 Markets</a>
+        <div class="game-info">
+        <span style="font-weight: bold; color: #000;">Hellas Verona<br>Ac Monza</style></span>
+        <span style="font-weight: bold; color: #000;">9:45pm Mon 21/10</span>
+        </div>
+        <div class="odds-row">
+            <div class="odds">
+                <button onclick="addToBetslip('1', 1.9)">1 <br>1.9</button>
+            </div>
+            <div class="odds">
+                <button onclick="addToBetslip('X', 3.4)">X <br>3.4</button>
+            </div>
+            <div class="odds">
+                <button onclick="addToBetslip('2', 3.2)">2 <br>3.2</button>
+            </div>
+        </div>
+        <a href="#" class="markets-link">+93 Markets</a>
+    </div>   
+    
+</div>
+<!-- Betslip Section -->
+
+<div class="bottom-menu">
+    <div class="menu-bar">
+        <a href="javascript:void(0)" onclick="toggleMenu()">
+            <span class="icon">🏠</span>
+            <span>Menu</span>
+        </a>
+    </div>
+    <a href="{% url 'account' %}">
+        <span class="icon">👤</span>
+        <span>Account</span>
+    </a>
+    <a href="{% url 'my_bets' %}">
+        <span class="icon">🎫</span>
+        <span>My Bets</span>
+    </a>
+    <a href="{% url 'submit_betslip' %}">
+        <span class="icon">📝</span>
+        <span id="betslip-badge" class="badge">0</span>
+        <span>Betslip</span>
+    </a>
+</div>
+
+<!-- Footer Section -->
+<div class="footer">
+    <p>© 2024 BettingSite | Responsible Gambling</p>
+</div>
+
+<!-- JavaScript for Odds Calculation -->
+
+<script>
+    function openNav() {
+      document.getElementById("mySidebar").style.width = "250px";
+      document.getElementById("main").style.marginLeft = "250px";
+    }
+    
+    function closeNav() {
+      document.getElementById("mySidebar").style.width = "0";
+      document.getElementById("main").style.marginLeft= "0";
+    }
+    // Add event listener to detect clicks outside the sidebar
+document.addEventListener('click', function(event) {
+  const sidebar = document.getElementById('mySidebar');
+  if (!sidebar.contains(event.target) && sidebar.style.width === '250px') {
+    closeSidebar();
+  }
+});
+    </script>
+<script>
+    let currentIndex = 0;
+    
+    function showNextSlide() {
+        const slider = document.querySelector('.slider');
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+    
+        currentIndex++;
+        if (currentIndex >= totalSlides) {
+            currentIndex = 0;
+        }
+    
+        const offset = -currentIndex * 100; // Move to the next slide
+        slider.style.transform = `translateX(${offset}%)`;
+    }
+    
+    // Automatically move to the next slide every 3 seconds
+    setInterval(showNextSlide, 3000);
+    </script>
+   <script>
+    // Function to move matches from "Hot" and "Upcoming" to "Live" when they start
+function updateLiveMatches() {
+    const now = new Date(); // Get current date and time
+    const hotMatches = document.querySelectorAll('#hot .match');
+    const upcomingMatches = document.querySelectorAll('#upcoming .match');
+    const liveSection = document.getElementById('live');
+
+    // Function to move match to Live section, suspend odds, and start counting live minutes
+    const moveToLive = (match) => {
+        const startTime = new Date(match.getAttribute('data-start'));
+        const homeGoals = match.getAttribute('data-home-goals') || 0;
+        const awayGoals = match.getAttribute('data-away-goals') || 0;
+
+        liveSection.appendChild(match);  // Move match to live section
+        match.classList.add('live-match');  // Optionally add a class for styling live matches
+
+        // Suspend odds: Replace the odds with a lock icon
+        suspendOdds(match);
+
+        // Create a span to display live minutes and goals
+        const minutesLive = document.createElement('span');
+        minutesLive.classList.add('minutes-live');
+        match.querySelector('.game-info').appendChild(minutesLive);  // Append the minutes span to the game-info section
+
+        // Create a span to display the current score
+        const scoreSpan = document.createElement('span');
+        scoreSpan.classList.add('live-score');
+        scoreSpan.style.color = 'yellow';  // Optional styling
+        scoreSpan.textContent = `${homeGoals} - ${awayGoals}`;
+        match.querySelector('.game-info').appendChild(scoreSpan);  // Append the score span to the game-info section
+
+        // Update live minutes every minute
+        const intervalId = setInterval(() => {
+            const now = new Date();
+            const minutesElapsed = Math.floor((now - startTime) / 60000);  // Calculate minutes since match started
+            minutesLive.textContent = `${minutesElapsed} min`;  // Update live minutes
+
+            // Check if 90 minutes have passed
+            if (minutesElapsed >= 90) {
+                clearInterval(intervalId);  // Stop the interval
+                match.remove();  // Remove the match from the live section
+            }
+        }, 60000);  // Update every 60 seconds
+    };
+
+    // Loop through Hot matches
+    hotMatches.forEach(match => {
+        const startTime = new Date(match.getAttribute('data-start'));
+        if (startTime <= now) {
+            moveToLive(match);
+        }
+    });
+
+    // Loop through Upcoming matches
+    upcomingMatches.forEach(match => {
+        const startTime = new Date(match.getAttribute('data-start'));
+        if (startTime <= now) {
+            moveToLive(match);
+        }
+    });
+}
+
+// Function to suspend odds by replacing them with a lock icon
+function suspendOdds(match) {
+    const oddsRows = match.querySelectorAll('.odds-row .odds button');
+    oddsRows.forEach(odds => {
+        // Replace button content with a lock icon
+        odds.innerHTML = '🔓';
+        odds.disabled = true; // Disable the button
+    });
+}
+// Check if the match has reached 90 minutes
+           
+
+// Example: Update the score when goals are scored
+setTimeout(() => {
+    updateScore('match1', 1, 0);  // Updates match1's score to 1-0
+}, 20000);  // Simulate a goal 20 seconds after the page loads
+
+// Check every minute for matches that should be moved to Live
+setInterval(updateLiveMatches, 60000);  // Check every 60 seconds
+updateLiveMatches();  // Initial run when page loads
+
+   </script>
+<script>
+    // Function to add a bet to the betslip in localStorage and update the badge
+function addToBetslip(outcome, odds) {
+    const matchElement = event.target.closest('.match');
+    if (!matchElement) {
+        console.error("No .match container found for the clicked button.");
+        return;
+    }
+
+    const homeTeam = matchElement.getAttribute('data-home-team') || "Home Team";
+    const awayTeam = matchElement.getAttribute('data-away-team') || "Away Team";
+
+    // Create a bet object
+    const bet = {
+        homeTeam,
+        awayTeam,
+        outcome,
+        odds: parseFloat(odds),
+    };
+
+    // Retrieve existing bets from localStorage, or initialize an empty array
+    const betslip = JSON.parse(localStorage.getItem('betslip')) || [];
+    betslip.push(bet);
+
+    // Save updated betslip back to localStorage
+    localStorage.setItem('betslip', JSON.stringify(betslip));
+
+    // Update the badge count
+    updateBetslipBadge();
+}
+
+// Function to update the betslip badge with the number of selected teams
+function updateBetslipBadge() {
+    const betslip = JSON.parse(localStorage.getItem('betslip')) || [];
+    const badge = document.getElementById('betslip-badge');
+
+    // Update the badge count and display it if there are bets
+    const count = betslip.length;
+    if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'inline-block'; // Show badge when there are bets
+    } else {
+        badge.style.display = 'none'; // Hide badge when there are no bets
+    }
+}
+
+// Initialize the badge count on page load
+window.onload = updateBetslipBadge;
+
+</script>
+<script>
+    // Redirect to betslip page after adding a bet
+function redirectToBetslip() {
+    window.location.href = '/betslip/'; // Update with the correct URL for your betslip page
+}
+
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Check if the user is authenticated and balance is available
+        {% if user.is_authenticated %}
+            const userBalance = {{ user.balance|default:0|floatformat:2 }};
+            
+            // Update the "Login" button to show the user's balance
+            const balanceBtn = document.getElementById("user-balance-btn");
+            balanceBtn.textContent = `Bal ${userBalance}`;
+            balanceBtn.href = "#";  // Optional: link to balance or account page
+            
+            // Update the "Register" button to show "Deposit" instead
+            const depositBtn = document.getElementById("register-deposit-btn");
+            depositBtn.textContent = "Deposit";
+            depositBtn.href = "{% url "account" %}";  // Link to deposit page
+
+        {% endif %}
+    });
+</script>
+<script>
+    function toggleMenu() {
+    const sidebar = document.getElementById("mySidebar");
+    if (sidebar.style.width === "250px") {
+        sidebar.style.width = "0"; // Close the sidebar
+    } else {
+        sidebar.style.width = "250px"; // Open the sidebar
+    }
+}
+
+// Close sidebar when clicking outside of it only on smaller screens
+window.onclick = function(event) {
+    const sidebar = document.getElementById("mySidebar");
+    const menuButton = document.querySelector(".menu-bar a");
+
+    // Close sidebar only if screen width is less than 768px
+    if (window.innerWidth < 768 && !sidebar.contains(event.target) && !menuButton.contains(event.target)) {
+        sidebar.style.width = "0"; // Close the sidebar
+    }
+};
+
+</script>
+<script>
+    // Select the betslip container and initialize total odds
+const betslipContainer = document.getElementById('betslip-items');
+let totalOdds = 1;
+
+// Function to load and display betslip items from localStorage
+function loadBetslip() {
+    totalOdds = 1;
+    const betslip = JSON.parse(localStorage.getItem('betslip')) || [];
+    betslipContainer.innerHTML = ""; 
+
+    betslip.forEach((bet, index) => {
+        const betItem = document.createElement('div');
+        betItem.classList.add('bet-item');
+        betItem.innerHTML = `
+            <div class="bet-details">
+                <strong>${bet.homeTeam} vs ${bet.awayTeam}</strong><br>
+                Outcome: ${bet.outcome}<br>
+                Odds: ${bet.odds.toFixed(2)}
+            </div>
+            <button class="remove-btn" onclick="removeBet(${index})">Remove</button>
+        `;
+        betslipContainer.appendChild(betItem);
+        totalOdds *= bet.odds;
+    });
+
+    document.getElementById('total-odds').textContent = `Total Odds: ${totalOdds.toFixed(2)}`;
+    calculatePossibleWin();
+}
+
+// Function to add a new bet to the betslip
+function addBet(bet) {
+    const betslip = JSON.parse(localStorage.getItem('betslip')) || [];
+    betslip.push(bet);
+    localStorage.setItem('betslip', JSON.stringify(betslip));
+    loadBetslip(); // Refresh the betslip display immediately
+}
+
+// Function to calculate possible win based on bet amount
+function calculatePossibleWin() {
+    const betAmount = parseFloat(document.getElementById('bet-amount').value) || 0;
+    const possibleWin = betAmount * totalOdds;
+    document.getElementById('possible-win').textContent = `Possible Win: ${possibleWin.toFixed(2)}`;
+}
+
+// Function to remove a bet from the betslip
+function removeBet(index) {
+    const betslip = JSON.parse(localStorage.getItem('betslip')) || [];
+    betslip.splice(index, 1);
+    localStorage.setItem('betslip', JSON.stringify(betslip));
+    loadBetslip(); // Refresh the betslip display immediately
+}
+
+// Function to clear all bets in the betslip
+function clearBetslip() {
+    localStorage.removeItem('betslip');
+    loadBetslip(); // Refresh the betslip display immediately
+}
+
+// Initial load of the betslip
+window.onload = loadBetslip;
+
+</script>
+</body>
+</html>

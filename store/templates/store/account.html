@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Page</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="account-container">
+        <h2>Account Page</h2>
+
+        <!-- Personal Details Section -->
+        <div class="personal-details">
+            <p> <span id="phoneNumber">+1234567890</span></p>
+        </div>
+
+        <!-- Balance and Main Transaction Controls -->
+        <div class="balance-section">
+            <h3>Total Balance</h3>
+            <p><strong>Balance:</strong> <span id="balance">0.00</span></p>
+            <button class="transaction-btn" onclick="deposit(100)">Deposit</button>
+            <button class="transaction-btn" onclick="withdraw(100)">Withdraw</button>
+        </div>
+
+        <!-- Additional Deposit Buttons -->
+        <div class="additional-deposits">
+            <h3>Quick Deposit Options</h3>
+            <button class="deposit-btn" onclick="deposit(200)">Deposit 200</button>
+            <button class="deposit-btn" onclick="deposit(500)">Deposit 500</button>
+            <button class="deposit-btn" onclick="deposit(1000)">Deposit 1000</button>
+        </div>
+
+        <!-- Logout Button -->
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    
+<script>
+    // Initial balance
+let balance = 0;
+
+// Fetch user data (placeholder example)
+function fetchUserData() {
+    document.getElementById("phoneNumber").textContent = "+1234567890"; // Replace with actual phone number fetch
+    document.getElementById("balance").textContent = balance.toFixed(2);
+}
+
+// Function to handle deposit with 15% reduction
+function deposit(amount) {
+    const reducedAmount = amount * 0.85; // Apply 15% reduction
+    balance += reducedAmount; // Add reduced amount to balance
+    document.getElementById("balance").textContent = balance.toFixed(2); // Update balance display
+}
+
+// Function to handle withdraw action
+function withdraw(amount) {
+    if (balance >= amount) {
+        balance -= amount; // Subtract amount from balance
+        document.getElementById("balance").textContent = balance.toFixed(2); // Update balance display
+    } else {
+        alert("Insufficient balance.");
+    }
+}
+
+// Function to simulate logout action
+function logout() {
+    alert("You have logged out.");
+    window.location.href = "/login"; // Redirect to login page (update with actual URL if needed)
+}
+
+// Run on page load
+window.onload = fetchUserData;
+
+</script>
+
+  <style>
+    /* Container styling */
+.account-container {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+/* Section Titles */
+.account-container h2, .account-container h3 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Personal Details Section */
+.personal-details p {
+    font-size: 18px;
+    color: #555;
+    margin: 8px 0;
+}
+
+/* Balance Section Styling */
+.balance-section {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e6f7ff;
+    border-radius: 10px;
+    color: #333;
+}
+
+/* Transaction Button Styling */
+.transaction-btn {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 15px;
+    margin: 10px 5px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.transaction-btn:hover {
+    background-color: #43a047;
+}
+
+/* Additional Deposit Buttons */
+.deposit-btn {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px 5px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.deposit-btn:hover {
+    background-color: #43a047;
+}
+
+/* Logout Button Styling */
+.logout-btn {
+    background-color: #d9534f;
+    color: white;
+    padding: 10px 20px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.logout-btn:hover {
+    background-color: #c9302c;
+}
+
+
+
+/* Responsive Styling */
+@media (max-width: 600px) {
+    .account-container {
+        max-width: 90%;
+    }
+}
+
+  </style>
+</body>
+</html>

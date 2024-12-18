@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Betslip</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .betslip-container {
+            background-color:  hsl(71, 100%, 50%);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .bet-item {
+            padding: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+        .bet-item:last-child {
+            border-bottom: none;
+        }
+        .bet-details {
+            flex-grow: 1;
+        }
+        .remove-btn {
+            background-color: #f44336;
+            border: none;
+            color: white;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .remove-btn:hover {
+            background-color: #d32f2f;
+        }
+        .input-section, .total-section {
+            margin: 10px 0;
+            text-align: center;
+        }
+        #bet-amount {
+            width: 80%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        
+        #bet-amount::-webkit-outer-spin-button,
+        #bet-amount::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+        .total-section span {
+            display: block;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        .clear-btn {
+            background-color: #f44336;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            display: block;
+            margin: 10px auto;
+        }
+        .clear-btn:hover {
+            background-color: #d32f2f;
+        }
+        .submit-btn {
+            background-color: #00ff6a;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 10px;
+            width: 100%;
+        }
+        .submit-btn:hover {
+            background-color: #00ff6a;
+        }
+    </style>
+</head>
+<body>
+    <div class="betslip-container">
+        <h2>Your Betslip</h2>
+        <div id="betslip-items"></div>
+        <button class="clear-btn" onclick="clearBetslip()">Clear All</button>
+        <div class="input-section">
+            <input type="number" id="bet-amount" name="bet_amount" placeholder="Enter amount" oninput="calculatePossibleWin()">
+        </div>
+
+        <div class="total-section">
+            <span id="total-odds">Total Odds: 0</span>
+            <span id="possible-win">Possible Win: 0</span>
+        </div>
+
+        <!-- Form for submitting the betslip -->
+        <form id="betslip-form" action="{% url 'submit_betslip' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="betslip_data" id="betslip-data">
+            <input type="hidden" name="bet_amount" id="bet-amount-form">
+            <input type="hidden" name="total_odds" id="total-odds-form">
+            <button type="button" class="submit-btn" onclick="submitBetslip()">Place Bet</button>
+        </form>
+    
+    </div>
+
+    <script>
+        const betslipContainer = document.getElementById('betslip-items');
+        let totalOdds = 1;
+
+        function loadBetslip() {
+            totalOdds = 1;
+            const betslip = JSON.parse(localStorage.getItem('betslip')) || [];
+            betslipContainer.innerHTML = ""; 
+
+            betslip.forEach((bet, index) => {
+                const betItem = document.createElement('div');
+                betItem.classList.add('bet-item');
+                betItem.innerHTML = `
+                    <div class="bet-details">
+                        <strong>${bet.homeTeam} vs ${bet.awayTeam}</strong><br>
+                        Outcome: ${bet.outcome}<br>
+                        Odds: ${bet.odds.toFixed(2)}
+                    </div>
+                    <button class="remove-btn" onclick="removeBet(${index})">Remove</button>
+                `;
+                betslipContainer.appendChild(betItem);
+                totalOdds *= bet.odds;
+            });
+
+            document.getElementById('total-odds').textContent = `Total Odds: ${totalOdds.toFixed(2)}`;
+            calculatePossibleWin();
+        }
+
+        function calculatePossibleWin() {
+            const betAmount = parseFloat(document.getElementById('bet-amount').value) || 0;
+            const possibleWin = betAmount * totalOdds;
+            document.getElementById('possible-win').textContent = `Possible Win: ${possibleWin.toFixed(2)}`;
+        }
+
+        function submitBetslip() {
+            const betslip = JSON.parse(localStorage.getItem('betslip')) || [];
+            const betAmount = parseFloat(document.getElementById('bet-amount').value) || 0;
+
+            if (betslip.length === 0 || betAmount === 0) {
+                alert('Please add bets and enter an amount.');
+                return;
+            }
+
+            document.getElementById('betslip-data').value = JSON.stringify({
+                bets: betslip,
+                bet_amount: betAmount,
+                total_odds: totalOdds
+            });
+            document.getElementById('bet-amount-form').value = betAmount;
+            document.getElementById('total-odds-form').value = totalOdds;
+            document.getElementById('betslip-form').submit();
+        }
+
+        function removeBet(index) {
+            const betslip = JSON.parse(localStorage.getItem('betslip')) || [];
+            betslip.splice(index, 1);
+            localStorage.setItem('betslip', JSON.stringify(betslip));
+            loadBetslip();
+        }
+
+        function clearBetslip() {
+            localStorage.removeItem('betslip');
+            loadBetslip();
+        }
+
+        window.onload = loadBetslip;
+    </script>
+</body>
+</html>

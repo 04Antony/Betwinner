@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Bets</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2, h3 {
+            color: #444;
+            text-align: center;
+        }
+
+        .betslip-container, .individual-bets-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            font-size: 14px;
+            font-family: 'Times New Roman', Times, serif;
+ 
+
+        }
+
+        li {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+
+        .bet-details {
+            margin-bottom: 10px;
+        }
+
+        .cashout-button {
+            width: 100%;
+            padding: 10px;
+            background-color:  #00ff6a;;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .cashout-button:hover {
+            background-color:  #00ff6a;;
+        }
+
+        .bet-summary {
+        width: 100%; /* Adjust width as needed */
+        padding-right: 20px;
+    }
+
+    .bet-details {
+        width: 100%; /* Adjust width if needed */
+        padding-right: 20px;
+        color: black; /* Text color for dark backgrounds */
+    }
+
+    .bet-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px; /* Spacing between items */
+    }
+
+    .bet-item .label {
+        font-weight: bolder;
+    }
+
+    .bet-item .value {
+        text-align: right;
+    }
+
+    </style>
+</head>
+<body>
+
+    <!-- Display Betslips if available, otherwise show Individual Bets -->
+    {% if betslips %}
+        <div class="betslip-container">
+            <h3>My Bets</h3>
+            <ul>
+                {% for betslip in betslips %}
+                    <li>
+                        <div>
+                            
+                            <ul>
+                                {% for bet in betslip.bet_data.bets %}
+                                    <li>{{ bet.homeTeam }} vs {{ bet.awayTeam }} - {{ bet.outcome }} (Odds: {{ bet.odds|floatformat:1 }})</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="bet-details">
+                            <div class="bet-item">
+                                <span class="label"><strong>Bet Amount</strong></span>
+                                <span class="value">{{ betslip.bet_amount }}</span>
+                            </div>
+                            <div class="bet-item">
+                                <span class="label"><strong>Total Odds</strong></span>
+                                <span class="value">{{ betslip.total_odds|floatformat:1 }}</span>
+                            </div>
+                            <div class="bet-item">
+                                <span class="label"><strong>Possible Win</strong></span>
+                                <span class="value">{{ betslip.possible_win|floatformat:1 }}</span>
+                            </div>
+                            <div class="bet-item">
+                                <span class="label"><strong>Withholding Tax</strong></span>
+                                <span class="value">{{ betslip.withholding_tax|floatformat:1 }}</span>
+                            </div>
+                            <div class="bet-item">
+                                <span class="label"><strong>Payout</strong></span>
+                                <span class="value">{{ betslip.payout|floatformat:1 }}</span>
+                            </div>
+                        </div>
+                        <button class="cashout-button">Cash Out</button>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p>No bets placed yet.</p>
+    {% endif %}
+</body>
+</html>

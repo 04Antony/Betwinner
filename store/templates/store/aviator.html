@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+
+    <title>Aviator Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a2e;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        /* Navbar Styles */
+        #navbar {
+            background-color: #162447;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+        }
+
+        #balance-button {
+            font-size: 14px;
+            padding: 5px 10px;
+            background-color: #e43f5a;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-left: 80px;
+        }
+
+        #balance-button:hover {
+            background-color: #f64f59;
+        }
+
+        #balance-button:hover {
+            background-color: #f64f59;
+        }
+
+        #logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e43f5a;
+        }
+
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #plane-axis-section {
+            position: relative;
+            width: 90%;
+            height: 300px;
+            background-color: #162447;
+            border: 2px solid #e43f5a;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        #graph {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        #plane-path {
+            fill: none;
+            stroke: #00ff00;
+            stroke-width: 2;
+        }
+
+        #aviator-plane {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            transform: translate(-20px, -20px); /* Center plane on path point */
+        }
+
+        #x-axis-label {
+            position: absolute;
+            bottom: 5px;
+            left: 10px;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        #crash-multiplier {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        #betting-section {
+            text-align: center;
+            background-color: #162447;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+        }
+
+        input, button {
+            font-size: 16px;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        input {
+            background-color: #e6e6e6;
+            color: #000;
+        }
+
+        button {
+            background-color: #e43f5a;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #f64f59;
+        }
+        #aviator-plane {
+    position: absolute;
+    transform: translate(-10px, -10px); /* Adjust for emoji center */
+    font-size: 24px; /* Adjust size of the emoji */
+        }
+
+        .multiplier {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            padding: 100px;
+        }
+
+        .axis-container {
+            position: relative;
+            width: 85vw;
+            height: 50vh;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(50, 50, 50, 0.9));
+            border: 1px solid #444;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+
+        #trailCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .plane {
+            font-size: 2rem;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            transition: transform 0.1s linear;
+        }
+
+        /* Hovering animation for plane */
+        .plane.waiting {
+            animation: hovering 1s infinite alternate ease-in-out;
+        }
+
+        @keyframes hovering {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(0, -10px); }
+        }
+
+
+    
+   .game-container {
+            text-align: center;
+            color: #ffffff;
+            margin-top: 70px; /* Push content down to avoid overlap with navbar */
+        }
+
+        .multiplier {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            padding: 100px;
+        }
+
+        .axis-container {
+            position: relative;
+            width: 85vw;
+            height: 50vh;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(50, 50, 50, 0.9));
+            border: 1px solid #444;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+
+        #trailCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #plane {
+            position: absolute;
+            font-size: 24px;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s linear;
+        }
+
+        @keyframes hovering {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(0, -10px); }
+        }
+
+        #aviator-bet-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px; /* Space between input/button row and quick bet buttons */
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px; /* Space between input and button */
+}
+
+#bet_amount {
+    width: 50%; /* Take 50% of the width */
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}
+
+#BetButton {
+    width: 60%;
+    height: 100px;
+    background-color: #00c853; /* Green background */
+    border: none;
+    border-radius: 10px; /* Rounded corners */
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-transform: uppercase;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+#BetButton:hover {
+    background-color: #02a742;
+}
+
+.auto-bet-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align Auto Bet on the left */
+    margin-top: -10px; /* Adjust spacing to fit below the form row */
+}
+
+.auto-bet-section label {
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Spacing between checkbox and label text */
+}
+
+.auto-bet-section input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #00c853; /* Customize checkbox color */
+    cursor: pointer;
+}
+
+.quick-bet {
+    margin-top: 0px;        /* Offset from the left */
+    width: 30%;                /* Limit container width to 50% */
+    padding: 8px 12px;
+    display: flex;
+    flex-wrap: wrap;           /* Allow buttons to wrap into rows */
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 10px;                 /* Space between buttons */
+}
+
+
+.quick-bet button {
+    width: 40%;                /* Make buttons smaller in width */
+    padding: 4px 6px;          /* Reduce padding for compact size */
+    font-size: 12px;           /* Adjust font size for smaller buttons */
+    text-align: center;
+    margin: 0px;
+    border-radius: 4px;        /* Rounded edges for a cleaner look */
+}
+
+
+.quick-bet-btn:hover {
+    background-color: #424242;
+}
+
+.quick-bet-btn:active {
+    background-color: #212121;
+    transform: scale(0.98); /* Click effect */
+}
+
+.warning {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}
+#bet_amount{
+    width: 40%;
+}
+#betButton.cashout-mode {
+    background-color: #ff6f61; /* Example: Red for 'Cash Out' mode */
+    color: #fff; /* White text for better contrast */
+    transition: all 0.3s ease-in-out; /* Smooth transition effect */
+}
+
+#betButton {
+    background-color: #4caf50; /* Example: Green for 'Bet' mode */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+#players-list {
+    margin-top: 20px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background-color: #333;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+
+    </style>
+</head>
+<body>
+    <div id="navbar">
+        <div id="logo">Aviator</div>
+        <button id="balance-button"><strong></strong> Ksh {{ user_balance }}</button>
+    </div>
+    <div id="game-container">
+        <!-- Plane and Axis Section -->
+        <div class="game-container">
+            <div id="countdown">Countdown: 5</div>
+    
+            <div class="axis-container">
+                <div id="outcomeContainer" class="outcome-display"></div>
+                <div class="multiplier" id="multiplier">1.00x</div>
+                <canvas id="trailCanvas"></canvas>
+                <div class="plane waiting" id="plane">✈️</div>
+            </div>
+    
+        </div>
+
+        <!-- Current Crash Multiplier -->
+        
+
+        <!-- Betting Section -->
+        <div id="betting-section">
+            {% if user_balance < min_bet_amount %}
+                <p class="warning">You need at least Ksh {{ min_bet_amount }} to play.</p>
+            {% else %}
+                <form id="aviator-bet-form" method="POST" action="">
+                    {% csrf_token %}
+                    
+                    <!-- Form Row -->
+                    <div class="form-row">
+                        <!-- Bet Amount Input -->
+                        <input type="number" id="bet_amount" name="bet_amount" placeholder="Bet amount" required>
+        
+                        <!-- Place Bet Button -->
+                        <button id="betButton" onclick="handleButtonClick()">Bet</button>
+
+                    </div>
+        
+                    <!-- Quick Bet Options -->
+                    <div class="quick-bet">
+                        <button type="button" class="quick-bet-btn" data-value="100">100</button>
+                        <button type="button" class="quick-bet-btn" data-value="200">200</button>
+                        <button type="button" class="quick-bet-btn" data-value="500">500</button>
+                        <button type="button" class="quick-bet-btn" data-value="1000">1000</button>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+        
+        <div id="players-list">
+            <h2>Players</h2>
+            <ul id="players">
+                <!-- Dynamic player updates will go here -->
+            </ul>
+        </div>  
+    </div>
+    <script>
+        // Simulate the crash multiplier increasing and plane movement
+       
+        const playersList = document.getElementById("players");
+        const currentMultiplier = document.getElementById("current-multiplier");
+
+        // Open WebSocket connection
+        const ws = new WebSocket("ws://" + window.location.host + "/ws/aviator-game/");
+
+        ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+
+    if (data.event_type === "cashout") {
+        const player = document.createElement("li");
+        player.textContent = `${data.data.user} cashed out at ${data.data.multiplier}x - Winnings: $${data.data.winnings}`;
+        playersList.appendChild(player);
+    }
+
+    if (data.event_type === "update_multiplier") {
+        currentMultiplier.textContent = `Current Multiplier: ${data.data.multiplier}`;
+    }
+};
+
+ws.onclose = () => {
+    console.error("WebSocket closed unexpectedly");
+};
+
+        // Handle form submission
+      // Get necessary elements
+      const form = document.getElementById('aviator-bet-form');
+      const betButton = document.getElementById('BetButton'); // Reference the "Bet" button
+      const betAmountInput = document.getElementById('bet_amount');
+      let isBetPlaced = false; // Tracks if a bet is placed
+      let cashOutValue = 0;
+      let activeBet = null
+      let currentBetId = null;
+      let multiplier = 1.0;
+      let time = 0;
+      let isCrashed = false;
+      let interval, countdownInterval;
+      let countdown = 5;
+
+
+
+    
+
+
+// Function to update the button and input state
+function handleButtonClick() {
+    const betButton = document.getElementById("betButton");
+
+    if (!isBetPlaced) {
+        const betAmount = getBetAmount();
+        if (betAmount > 5) {
+            betButton.disabled = true; // Disable until bet is confirmed
+            placeBet(betAmount);
+        } else {
+            alert("Please enter a valid bet amount greater than 5!");
+        }
+    } else if (currentBetId) {
+        cashOut();
+    } else {
+        alert("No active bet for cash out.");
+    }
+}
+
+
+// Add an event listener to handle form submission for placing bets
+form.addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent page refresh on form submission
+
+    if (isBetPlaced) {
+        cashOut(); // Handle cash out if a bet is already active
+        return;
+    }
+
+    const betAmount = parseFloat(betAmountInput.value);
+    if (isNaN(betAmount) || betAmount <= 0) {
+        alert('Please enter a valid bet amount.');
+        return;
+    }
+
+    // Simulate placing a bet (you can update this with your backend logic)
+    fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                alert('Bet placed successfully!');
+                placeBet(betAmount); // Call the placeBet function
+            } else {
+                alert('Failed to place bet: ' + (data.message || 'Unknown error'));
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+});
+
+// Function to handle placing a bet
+function getCsrfToken() {
+    // Option 1: Retrieve from the meta tag
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if (csrfToken) return csrfToken;
+    console.error("CSRF token not found.");
+    return null;
+}
+function placeBet(betAmount) {
+    const payload = { bet_amount: betAmount };
+
+    fetch('/aviator/place-bet/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken(),
+        },
+        body: JSON.stringify(payload),
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.bet_id) {
+                console.log("Bet placed successfully:", data);
+
+                // Set the active bet ID
+                currentBetId = data.bet_id;
+                isBetPlaced = true;
+
+                // Update the button to "Cash Out"
+                const betButton = document.getElementById("betButton");
+                betButton.disabled = false; // Ensure the button is enabled
+                betButton.innerText = "Cash Out";
+                betButton.classList.add("cashout-mode");
+            } else {
+                console.error("Error placing bet:", data.error || "Unknown error");
+                alert(data.error || "An error occurred while placing the bet.");
+            }
+        })
+        .catch(error => {
+            console.error("Network error placing bet:", error);
+            alert("Failed to place bet. Please check your connection.");
+        });
+}
+
+
+// Function to handle cashing out
+async function cashOut() {
+    console.log("Cash Out function called");
+    if (!currentBetId) {
+        alert("No active bet to cash out.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`/aviator/cash-out/${currentBetId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken()
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert(`Cash out successful! You won: ${data.winnings}`);
+            currentBetId = null; // Clear the active bet ID
+            isBetPlaced = false;
+
+            // Reset the button
+            const betButton = document.getElementById("betButton");
+            betButton.innerText = "Bet";
+            betButton.classList.remove("cashout-mode");
+        } else {
+            alert(data.error || "Failed to cash out.");
+        }
+    } catch (error) {
+        console.error("Error cashing out:", error);
+        alert("An error occurred. Please try again.");
+    }
+}
+// Function to reset for the next round
+function resetForNextRound() {
+    isBetPlaced = false;
+    activeBet = null;
+    
+    console.log("Ready for the next round.");
+}
+
+
+function getBetAmount() {
+    const betInput = document.getElementById("bet_amount");
+    if (!betInput || isNaN(parseFloat(betInput.value)) || parseFloat(betInput.value) <= 0) {
+        return null; // Return null for invalid or missing inputs
+    }
+    return parseFloat(betInput.value); // Return the numeric value
+}
+
+
+
+
+function getCurrentMultiplier() {
+    // Replace with your logic for getting the current multiplier
+    return Math.random() * 2 + 1; // Example: Random multiplier between 1 and 6
+}
+
+
+
+
+
+// Canvas and context
+const trailCanvas = document.getElementById("trailCanvas");
+const ctx = trailCanvas.getContext("2d");
+trailCanvas.width = trailCanvas.clientWidth;
+trailCanvas.height = trailCanvas.clientHeight;
+
+// Plane and DOM elements
+const plane = document.getElementById("plane");
+const multiplierElement = document.getElementById("multiplier");
+const countdownElement = document.getElementById("countdown");
+const outcomeContainer = document.getElementById("outcomeContainer");
+
+let trailPoints = [];
+let xAxisOffset = 0;
+let yAxisOffset = 0;
+
+window.onload = function () {
+    startCountdown();
+    drawAxes(); // Draw initial axes
+};
+
+function startCountdown() {
+    countdown = 5; // Reset countdown
+    document.getElementById("countdown").textContent = `Waiting For Next Round ${countdown}`;
+    document.getElementById("multiplier").style.display = 'none';
+  
+    plane.classList.add("waiting"); // Hovering animation while waiting
+    multiplierElement.style.display = "none"; // Hide multiplier during countdown
+
+    countdownInterval = setInterval(() => {
+        countdown--;
+        countdownElement.textContent = `Waiting For Next Round ${countdown}`;
+        if (countdown <= 0) {
+            clearInterval(countdownInterval);
+            countdownElement.textContent = "";
+            startGame();
+        }
+    }, 1000);
+}
+
+function startGame() {
+    plane.classList.remove("waiting"); // Remove hover animation
+    multiplierElement.style.display = "block"; // Show multiplier
+
+    multiplier = 1;
+    time = 0;
+    isCrashed = false;
+    cashOutValue = null;
+    trailPoints = [];
+    xAxisOffset = 0;
+
+    trailPoints.push({ x: 0, y: trailCanvas.height });
+    const crashPoint = (Math.random() * 2
+     + 1.01).toFixed(2);
+    console.log("Crash point:", crashPoint);
+
+    interval = setInterval(() => updateGame(crashPoint), 50);
+}
+
+function updateGame(crashPoint) {
+    if (isCrashed) return;
+
+    time += 0.05; // Increment time
+    multiplier += 0.02; // Increment multiplier
+    multiplierElement.textContent = `${multiplier.toFixed(2)}x`;
+
+    const x = time * 30;
+    const y = multiplier * 15;
+
+    // Smooth adjustments for scrolling
+    if (x - xAxisOffset > trailCanvas.width / 2) {
+        xAxisOffset += (x - xAxisOffset - trailCanvas.width / 2) * 0.1;
+    }
+    if (y + yAxisOffset > trailCanvas.height / 2) {
+        yAxisOffset += (y + yAxisOffset - trailCanvas.height / 2) * 0.1;
+    }
+
+    plane.style.transform = `translate(${x - xAxisOffset}px, -${y - yAxisOffset}px)`;
+    trailPoints.push({ x, y: trailCanvas.height - y });
+
+    drawTrail();
+
+    if (multiplier >= crashPoint) crash(crashPoint);
+}
+
+
+function drawTrail() {
+    // Clear the canvas completely
+    ctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+
+    // Redraw the axes
+    drawAxes();
+
+    // If the game hasn't crashed, draw the trail
+    if (!isCrashed && trailPoints.length > 1) {
+        ctx.beginPath();
+        ctx.moveTo(trailPoints[0].x - xAxisOffset, trailPoints[0].y + yAxisOffset);
+
+        trailPoints.forEach(point => {
+            ctx.lineTo(point.x - xAxisOffset, point.y + yAxisOffset);
+        });
+
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+}
+
+
+function drawAxes() {
+    // Clear canvas for axes
+    ctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+
+    // X-axis
+    ctx.beginPath();
+    ctx.moveTo(0, trailCanvas.height - yAxisOffset);
+    ctx.lineTo(trailCanvas.width, trailCanvas.height - yAxisOffset);
+    ctx.strokeStyle = "#888";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Y-axis
+    ctx.beginPath();
+    ctx.moveTo(-xAxisOffset, 0);
+    ctx.lineTo(-xAxisOffset, trailCanvas.height);
+    ctx.strokeStyle = "#888";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // X-axis scale
+    for (let x = 0; x < trailCanvas.width; x += 50) {
+        ctx.beginPath();
+        ctx.arc(x - xAxisOffset, trailCanvas.height - yAxisOffset, 2, 0, Math.PI * 2);
+        ctx.fillStyle = "#aaa";
+        ctx.fill();
+    }
+
+    // Y-axis scale
+    for (let y = trailCanvas.height; y > 0; y -= 50) {
+        ctx.beginPath();
+        ctx.arc(-xAxisOffset, y - yAxisOffset, 2, 0, Math.PI * 2);
+        ctx.fillStyle = "#aaa";
+        ctx.fill();
+    }
+}
+
+function crash(crashPoint) {
+    isCrashed = true;
+    clearInterval(interval); // Stop the game
+
+    // Reset trail points to make the path disappear
+    trailPoints = [];
+    ctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height); // Clear the canvas
+    drawAxes(); // Keep the axes visible
+
+    multiplierElement.style.color = "red"; // Highlight multiplier
+    outcomeContainer.textContent = `Crashed @ ${crashPoint}x`;
+    outcomeContainer.style.color = "red";
+
+    setTimeout(() => {
+        outcomeContainer.textContent = "";
+        multiplierElement.style.color = "white";
+        startCountdown(); // Restart after delay
+    }, 2000);
+}
+document.addEventListener("DOMContentLoaded", () => {
+    // Select all quick bet buttons and the bet amount input field
+    const quickBetButtons = document.querySelectorAll(".quick-bet-btn");
+    const betAmountInput = document.getElementById("bet_amount");
+
+    // Add click event listener to each quick bet button
+    quickBetButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const betValue = button.getAttribute("data-value"); // Get the value from data-value
+            betAmountInput.value = betValue; // Set it to the input field
+        });
+    });
+});
+document.addEventListener("DOMContentLoaded", () => {
+    // Select all quick bet buttons and the bet amount input field
+    const quickBetButtons = document.querySelectorAll(".quick-bet-btn");
+    const betAmountInput = document.getElementById("bet_amount");
+
+    // Add click event listener to each quick bet button
+    quickBetButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const betValue = button.getAttribute("data-value"); // Get the value from data-value
+            betAmountInput.value = betValue; // Set it to the input field
+        });
+    });
+});
+function fetchGameStatus() {
+    fetch('/api/active-game/') // Replace with your backend endpoint
+        .then(response => response.json())
+        .then(data => {
+            if (data.is_active) {
+                document.getElementById('multiplier').textContent = `${data.current_multiplier}x`;
+                document.getElementById('status').textContent = "Game Active";
+            } else {
+                document.getElementById('status').textContent = "Game Over";
+            }
+        })
+        .catch(error => console.error("Error fetching game status:", error));
+}
+
+// Poll every second
+setInterval(fetchGameStatus, 1000);
+
+    </script>
+</body>
+</html>
